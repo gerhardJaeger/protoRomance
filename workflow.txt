@@ -1,0 +1,41 @@
+Requirements:
+
+- Python v.2.7
+- Python packages:
+  o biopython
+  o ete2
+  o igraph
+  o Levenshtein
+  o multiprocessing
+  o numpy
+  o pandas
+  o re
+  o scipy
+  o sklearn
+- R v. 3.0.2
+- R packages:
+  o ape
+- Paup* (available from https://people.sc.fsu.edu/~dswofford/paup_test/)
+- BayesTraits (available from http://www.evolution.rdg.ac.uk/BayesTraits.html)
+- MrBayes (available from http://mrbayes.sourceforge.net/), compiled for MPI
+- MPI
+- treeannotator (available as part of BEAST v.2 from http://www.beast2.org/)
+
+
+Workflow:
+The entire workflow can be replicated by issuing the commands below in the order listed. 
+The script estimatePMI.py requires 50 cores on a parallel Unix server, and the MrBayes
+command requires 8 cores. Please adapt to your hardware.
+
+> python estimatePMI.py
+> python cognateClustering.py
+> python combinePartitions.py
+> mpirun -np 8 mb -i albanoRomance.mb.nex
+> R --vanilla < convertTrees.r
+> python mbPostprocessing.py
+> treeannotator albanoRomance.posterior.tree albanoRomance.mcc.tre
+> R --vanilla < convert_mccTree.r
+> python asrCC.py
+> python asrSounds.csv
+> python evaluation.py
+
