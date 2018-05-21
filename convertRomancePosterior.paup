@@ -1,0 +1,7 @@
+#Nexus
+Begin Paup;
+set incr=auto;
+gettrees file = romance.posterior.tree;
+savetrees file = romance.posterior.nex.tree replace=yes brlen=user;
+q;
+End;

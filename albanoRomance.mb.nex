@@ -1,0 +1,20 @@
+#NEXUS
+begin MrBayes;
+      execute albanoRomance_sc_cc.nex;
+      charset sc = 1-1440;
+      charset cc = 1441-1793;
+      partition dtype = 2:sc, cc;
+      set partition = dtype;
+      unlink Statefreq=(all) shape=(all);
+      lset applyto=(all) rates=gamma;
+      lset applyto=(1) coding=noabsencesites;
+      lset applyto=(2) coding=noabsencesites;
+      constraint albanian = ALBANIAN_GHEG ALBANIAN ALBANIAN_TOSK;
+      constraint romance = 4-.;
+      prset topologypr = constraints(albanian,romance);
+      mcmcp stoprule=yes stopval = 0.01 filename = albanoRomance;
+      mcmcp mcmcdiagn=yes diagnfreq=5000 samplefreq=10000 burninfrac=.1;
+      set seed=12345;
+      set swapseed=12345;
+      mcmc ngen = 11000000;
+end;
