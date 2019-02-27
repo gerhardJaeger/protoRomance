@@ -44,7 +44,7 @@ data = pd.read_csv('dataset.tab',
                    index_col=0, na_filter=False, sep='\t')
 
 
-data = data[(data.wls_gen == 'ROMANCE') + (data.index == 'SANSKRIT')]
+data = data[data.wls_gen.isin(['ROMANCE', 'ALBANIAN'])]
 data = data[data.index != 'LATIN']
 
 concepts100 = np.array(data.columns[9:])
@@ -248,10 +248,10 @@ for i in range(10):
                for s1 in sounds for s2 in sounds}
 
 
-pmi.to_csv('pmi-sanskritRomance.csv')
+pmi.to_csv('pmi-albanoRomance.csv')
 
 
-dataWL.to_csv('sanskritRomanceASJP.csv', index=False)
+dataWL.to_csv('albanoRomanceASJP.csv', index=False)
 
 
 sc = pd.DataFrame(index=taxa)
@@ -267,6 +267,4 @@ for c in concepts:
     cMtx = cMtx.reindex(taxa, fill_value='-')
     sc = pd.concat([sc, cMtx], axis=1)
 
-nexCharOutput(sc.values, sc.index, 'sanskritRomanceSC.nex', 'restriction')
-
-
+nexCharOutput(sc.values, sc.index, 'albanoRomanceSC.nex', 'restriction')

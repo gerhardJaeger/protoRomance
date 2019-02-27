@@ -68,10 +68,10 @@ def scoreNW(x, y, pmiDict, gp1, gp2):
                 for xx in x1 for yy in y1])
 
 
-data = pd.read_csv('sanskritRomanceASJP.csv')
+data = pd.read_csv('albanoRomanceASJP.csv')
 data['ID'] = range(len(data))
 
-pmi = pd.read_csv('pmi-sanskritRomance.csv', index_col=0)
+pmi = pd.read_csv('pmi-albanoRomance.csv', index_col=0)
 sounds = np.array(pmi.index)
 pmiDict = {(s1, s2): pmi[s1][s2]
            for s1 in sounds for s2 in sounds}
@@ -79,11 +79,6 @@ pmiDict = {(s1, s2): pmi[s1][s2]
 
 taxa = data.language.unique()
 
-
-lpairs = pd.DataFrame([(l1, l2)
-                       for i, l1 in enumerate(taxa)
-                       for j, l2 in enumerate(taxa)
-                       if i < j])
 
 ipairs = pd.DataFrame([(i, j)
                        for i in data.index
@@ -103,8 +98,6 @@ wpairs['target'] = np.array(wpairs.concept1 == wpairs.concept2, int)
 
 wpairs['PMI'] = [sscore(a, b, pmiDict, gp1, gp2)
                  for (a, b) in wpairs[['word1', 'word2']].values]
-
-#wpairs.to_csv('sanskritRomance.wordpairs.csv', index=False)
 
 lr = LogisticRegression()
 lr.fit(np.c_[wpairs.PMI.values], wpairs.target.values)
@@ -156,9 +149,9 @@ for c in concepts:
     cMtx = cMtx.reindex(taxa, fill_value='-')
     ccMtx = pd.concat([ccMtx, cMtx], axis=1)
 
-ccMtx.to_csv('sanskritRomanceCCbin.csv')
+ccMtx.to_csv('albanoRomanceCCbin.csv')
 
-nexCharOutput(ccMtx.values, ccMtx.index, 'sanskritRomanceCC.nex')
+nexCharOutput(ccMtx.values, ccMtx.index, 'albanoRomanceCC.nex')
 
 ccData = ccData.sort_values('cc')
-ccData.to_csv('sanskritRomanceCC.csv', index='False')
+ccData.to_csv('albanoRomanceCC.csv', index='False')
