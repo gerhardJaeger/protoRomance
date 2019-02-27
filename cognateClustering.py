@@ -68,10 +68,10 @@ def scoreNW(x, y, pmiDict, gp1, gp2):
                 for xx in x1 for yy in y1])
 
 
-data = pd.read_csv('armenoRomanceASJP.csv')
+data = pd.read_csv('sanskritRomanceASJP.csv')
 data['ID'] = range(len(data))
 
-pmi = pd.read_csv('pmi-armenoRomance.csv', index_col=0)
+pmi = pd.read_csv('pmi-sanskritRomance.csv', index_col=0)
 sounds = np.array(pmi.index)
 pmiDict = {(s1, s2): pmi[s1][s2]
            for s1 in sounds for s2 in sounds}
@@ -85,29 +85,26 @@ lpairs = pd.DataFrame([(l1, l2)
                        for j, l2 in enumerate(taxa)
                        if i < j])
 
+ipairs = pd.DataFrame([(i, j)
+                       for i in data.index
+                       for j in data.index
+                       if i < j])
 
-wpairs = pd.DataFrame()
-for i, (l1, l2) in enumerate(lpairs.loc[
-        np.random.permutation(lpairs.index)].values):
-    print(i)
-    l1Data = data[data.language == l1]
-    l2Data = data[data.language == l2]
-    lpPairs = pd.DataFrame([list(l1Data[['concept', 'language',
-                                         'word', 'ID']].loc[i]) +
-                            list(l2Data[['concept', 'language',
-                                         'word', 'ID']].loc[j])
-                            for i in l1Data.index
-                            for j in l2Data.index],
-                           columns=['concept1', 'language1', 'word1', 'ID1',
-                                    'concept2', 'language2', 'word2', 'ID2'])
-    wpairs = pd.concat([wpairs, lpPairs])
+
+wpairs = pd.DataFrame(np.c_[data.loc[ipairs[0].values].values,
+                            data.loc[ipairs[1].values].values],
+                      columns=['concept1', 'language1', 'word1', 'ID1',
+                               'concept2', 'language2', 'word2', 'ID2'])
+
+wpairs = wpairs[wpairs.language1 != wpairs.language2]
+wpairs.index = range(len(wpairs))
 
 wpairs['target'] = np.array(wpairs.concept1 == wpairs.concept2, int)
 
 wpairs['PMI'] = [sscore(a, b, pmiDict, gp1, gp2)
                  for (a, b) in wpairs[['word1', 'word2']].values]
 
-wpairs.to_csv('armenoRomance.wordpairs.csv', index=False)
+#wpairs.to_csv('sanskritRomance.wordpairs.csv', index=False)
 
 lr = LogisticRegression()
 lr.fit(np.c_[wpairs.PMI.values], wpairs.target.values)
@@ -159,9 +156,9 @@ for c in concepts:
     cMtx = cMtx.reindex(taxa, fill_value='-')
     ccMtx = pd.concat([ccMtx, cMtx], axis=1)
 
-ccMtx.to_csv('armenoRomanceCCbin.csv')
+ccMtx.to_csv('sanskritRomanceCCbin.csv')
 
-nexCharOutput(ccMtx.values, ccMtx.index, 'armenoRomanceCC.nex')
+nexCharOutput(ccMtx.values, ccMtx.index, 'sanskritRomanceCC.nex')
 
 ccData = ccData.sort_values('cc')
-ccData.to_csv('armenoRomanceCC.csv', index='False')
+ccData.to_csv('sanskritRomanceCC.csv', index='False')

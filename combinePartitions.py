@@ -23,13 +23,13 @@ def nexCharOutput(chMtx, names, outfile, datatype='STANDARD'):
     f.close()
 
 
-sc = pd.read_csv('albanoRomanceSC.nex',
+sc = pd.read_csv('sanskritRomanceSC.nex',
                  skiprows=7,
                  skipfooter=4, engine='python',
                  index_col=0,
                  sep='\s+', header=None)
 
-cc = pd.read_csv('albanoRomanceCC.nex',
+cc = pd.read_csv('sanskritRomanceCC.nex',
                  skiprows=7,
                  skipfooter=4, engine='python',
                  index_col=0,
@@ -40,7 +40,7 @@ cc = cc.loc[sc.index]
 scCC = pd.DataFrame([list(sc[1][l]+cc[1][l]) for l in sc.index],
                     index=sc.index)
 
-nexCharOutput(scCC.values, scCC.index, 'albanoRomance_sc_cc.nex',
+nexCharOutput(scCC.values, scCC.index, 'sanskritRomance_sc_cc.nex',
               datatype='restriction')
 
 n = len(sc.values[0][0])
@@ -48,7 +48,7 @@ m = len(cc.values[0][0])
 
 mbCommands = """#NEXUS
 begin MrBayes;
-      execute albanoRomance_sc_cc.nex;
+      execute sanskritRomance_sc_cc.nex;
       charset sc = 1-"""+str(n)+""";
       charset cc = """+str(n+1)+"""-"""+str(n+m)+""";
       partition dtype = 2:sc, cc;
@@ -60,12 +60,14 @@ begin MrBayes;
       constraint romance = 4-.;
       prset topologypr = constraints(romance);
       report applyto=(2) ancstates=yes;
-      mcmcp stoprule=no stopval = 0.01 filename = albanoRomance nruns=4;
+      mcmcp stoprule=no stopval = 0.01 filename = sanskritRomance nruns=4;
       mcmcp mcmcdiagn=yes diagnfreq=10000 samplefreq=10000 burninfrac=.5;
       set seed=12345;
       set swapseed=12345;
       mcmc ngen = 50000000;
+      sumt;
+      sump;
 end;"""
 
-with open('albanoRomance.mb.nex', 'w') as f:
+with open('sanskritRomance.mb.nex', 'w') as f:
     f.write(mbCommands)

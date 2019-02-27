@@ -2,11 +2,11 @@ import numpy as np
 import pandas as pd
 
 
-cc = pd.read_csv('albanoRomanceCCbin.csv',
+cc = pd.read_csv('armenoRomanceCCbin.csv',
                  index_col=0,
                  dtype='str')
 
-romance = np.array([x for x in cc.index if 'ALBANIAN' not in x])
+romance = np.array([x for x in cc.index if 'ARMENIAN' not in x])
 
 cc = cc.loc[romance]
 
@@ -15,16 +15,16 @@ with open('romanceCC.tsv', 'w') as f:
         f.write(i+'\t')
         f.write('\t'.join(cc.loc[i].values)+'\n')
 
-p1 = pd.read_csv('albanoRomance.run1.p',
+p1 = pd.read_csv('armenoRomance.run1.p',
                  sep='\t', skiprows=1)
 
-p2 = pd.read_csv('albanoRomance.run2.p',
+p2 = pd.read_csv('armenoRomance.run2.p',
                  sep='\t', skiprows=1)
 
-p3 = pd.read_csv('albanoRomance.run3.p',
+p3 = pd.read_csv('armenoRomance.run3.p',
                  sep='\t', skiprows=1)
 
-p4 = pd.read_csv('albanoRomance.run4.p',
+p4 = pd.read_csv('armenoRomance.run4.p',
                  sep='\t', skiprows=1)
 
 

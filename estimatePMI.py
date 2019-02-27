@@ -43,7 +43,8 @@ def nexCharOutput(chMtx, names, outfile, datatype='STANDARD'):
 data = pd.read_csv('dataset.tab',
                    index_col=0, na_filter=False, sep='\t')
 
-data = data[data.wls_gen.isin(['ROMANCE', 'ARMENIAN'])]
+
+data = data[(data.wls_gen == 'ROMANCE') + (data.index == 'SANSKRIT')]
 data = data[data.index != 'LATIN']
 
 concepts100 = np.array(data.columns[9:])
@@ -247,10 +248,10 @@ for i in range(10):
                for s1 in sounds for s2 in sounds}
 
 
-pmi.to_csv('pmi-armenoRomance.csv')
+pmi.to_csv('pmi-sanskritRomance.csv')
 
 
-dataWL.to_csv('armenoRomanceASJP.csv', index=False)
+dataWL.to_csv('sanskritRomanceASJP.csv', index=False)
 
 
 sc = pd.DataFrame(index=taxa)
@@ -266,29 +267,6 @@ for c in concepts:
     cMtx = cMtx.reindex(taxa, fill_value='-')
     sc = pd.concat([sc, cMtx], axis=1)
 
-nexCharOutput(sc.values, sc.index, 'armenoRomanceSC.nex', 'restriction')
+nexCharOutput(sc.values, sc.index, 'sanskritRomanceSC.nex', 'restriction')
 
 
-#########
-
-
-def levalignFull(w):
-    """takes a pair of strings as input
-    and returns the Levenshtein alignment
-    in column format."""
-    x, y = w
-    algn = np.zeros((0, 2))
-    e = Levenshtein.opcodes(x, y)
-    for a in e:
-        if a[0] in ['replace', 'equal']:
-            x_a, x_e = a[1], a[2]
-            y_a, y_e = a[3], a[4]
-            ag = [list(x[x_a:x_e]), list(y[y_a:y_e])]
-        elif a[0] == 'delete':
-            x_a, x_e = a[1], a[2]
-            ag = [list(x[x_a:x_e]), ['-']*(x_e-x_a)]
-        else:
-            y_a, y_e = a[3], a[4]
-            ag = [['-'] * (y_e-y_a), list(y[y_a:y_e])]
-        algn = np.concatenate([algn, np.transpose(ag)])
-    return algn
