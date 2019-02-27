@@ -1,7 +1,6 @@
 library(ape)
 
-t1 <- read.nexus('albanoRomance.run1.t')
-write.tree(t1,'albanoRomance.run1.tre')
-
-t2 <- read.nexus('albanoRomance.run2.t')
-write.tree(t2,'albanoRomance.run2.tre')
+for (i in 1:4) {
+    tr <- read.nexus(paste0('albanoRomance.run',i,'.t'))
+    write.tree(tr,paste0('albanoRomance.run',i,'.tre'))
+}

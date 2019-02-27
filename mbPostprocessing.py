@@ -8,17 +8,41 @@ p1 = pd.read_csv('albanoRomance.run1.p',
 p2 = pd.read_csv('albanoRomance.run2.p',
                  sep='\t', skiprows=1)
 
-pr = pd.concat([p1[p1.Gen > 1000000], p2[p2.Gen > 1000000]])
+p3 = pd.read_csv('albanoRomance.run3.p',
+                 sep='\t', skiprows=1)
+
+p4 = pd.read_csv('albanoRomance.run4.p',
+                 sep='\t', skiprows=1)
+
+
+biGen = p1.Gen.max() // 2
+
+pr = pd.concat([p1[p1.Gen > biGen],
+                p2[p2.Gen > biGen],
+                p3[p3.Gen > biGen],
+                p4[p4.Gen > biGen]])
+
+bi = len(pr) // 4
 
 trees = []
 with open('albanoRomance.run1.tre') as f:
     for i, ln in enumerate(f.readlines()):
-        if i > 100:
-            t = Tree(ln.strip())
-            trees.append(t)
+        if i > bi:
+            tr = Tree(ln.strip())
+            trees.append(tr)
 with open('albanoRomance.run2.tre') as f:
     for i, ln in enumerate(f.readlines()):
-        if i > 100:
+        if i > bi:
+            t = Tree(ln.strip())
+            trees.append(t)
+with open('albanoRomance.run3.tre') as f:
+    for i, ln in enumerate(f.readlines()):
+        if i > bi:
+            t = Tree(ln.strip())
+            trees.append(t)
+with open('albanoRomance.run4.tre') as f:
+    for i, ln in enumerate(f.readlines()):
+        if i > bi:
             t = Tree(ln.strip())
             trees.append(t)
 

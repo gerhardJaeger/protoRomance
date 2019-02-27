@@ -61,11 +61,11 @@ begin MrBayes;
       constraint romance = 4-.;
       prset topologypr = constraints(romance);
       report applyto=(2) ancstates=yes;
-      mcmcp stoprule=yes stopval = 0.01 filename = albanoRomance;
-      mcmcp mcmcdiagn=yes diagnfreq=5000 samplefreq=10000 burninfrac=.1;
+      mcmcp stoprule=no stopval = 0.01 filename = albanoRomance nruns=4;
+      mcmcp mcmcdiagn=yes diagnfreq=10000 samplefreq=10000 burninfrac=.5;
       set seed=12345;
       set swapseed=12345;
-      mcmc ngen = 11000000;
+      mcmc ngen = 50000000;
 end;"""
 
 with open('albanoRomance.mb.nex', 'w') as f:
