@@ -126,7 +126,7 @@ synpairs['prediction'] = lr.predict_proba(np.c_[synpairs.PMI.values])[:, 1]
 
 
 ccData = pd.DataFrame()
-th = 0.0
+th = 0.25
 for c in concepts:
     cData = data[data.concept == c].copy()
     cPairs = synpairs[synpairs.concept == c]
