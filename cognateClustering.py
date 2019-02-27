@@ -68,10 +68,10 @@ def scoreNW(x, y, pmiDict, gp1, gp2):
                 for xx in x1 for yy in y1])
 
 
-data = pd.read_csv('albanoRomanceASJP.csv')
+data = pd.read_csv('armenoRomanceASJP.csv')
 data['ID'] = range(len(data))
 
-pmi = pd.read_csv('pmi-albanoRomance.csv', index_col=0)
+pmi = pd.read_csv('pmi-armenoRomance.csv', index_col=0)
 sounds = np.array(pmi.index)
 pmiDict = {(s1, s2): pmi[s1][s2]
            for s1 in sounds for s2 in sounds}
@@ -107,7 +107,7 @@ wpairs['target'] = np.array(wpairs.concept1 == wpairs.concept2, int)
 wpairs['PMI'] = [sscore(a, b, pmiDict, gp1, gp2)
                  for (a, b) in wpairs[['word1', 'word2']].values]
 
-wpairs.to_csv('albanoRomance.wordpairs.csv', index=False)
+wpairs.to_csv('armenoRomance.wordpairs.csv', index=False)
 
 lr = LogisticRegression()
 lr.fit(np.c_[wpairs.PMI.values], wpairs.target.values)
@@ -159,9 +159,9 @@ for c in concepts:
     cMtx = cMtx.reindex(taxa, fill_value='-')
     ccMtx = pd.concat([ccMtx, cMtx], axis=1)
 
-ccMtx.to_csv('albanoRomanceCCbin.csv')
+ccMtx.to_csv('armenoRomanceCCbin.csv')
 
-nexCharOutput(ccMtx.values, ccMtx.index, 'albanoRomanceCC.nex')
+nexCharOutput(ccMtx.values, ccMtx.index, 'armenoRomanceCC.nex')
 
 ccData = ccData.sort_values('cc')
-ccData.to_csv('albanoRomanceCC.csv', index='False')
+ccData.to_csv('armenoRomanceCC.csv', index='False')
