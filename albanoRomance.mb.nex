@@ -1,6 +1,6 @@
 #NEXUS
 begin MrBayes;
-      execute romance_sc_cc.nex;
+      execute albanoRomance_sc_cc.nex;
       charset sc = 1-1440;
       charset cc = 1441-1626;
       partition dtype = 2:sc, cc;

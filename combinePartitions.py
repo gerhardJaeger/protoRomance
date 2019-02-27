@@ -50,7 +50,7 @@ romance = [l for l in cc.index if 'ALBANIAN' not in l]
 
 mbCommands = """#NEXUS
 begin MrBayes;
-      execute romance_sc_cc.nex;
+      execute albanoRomance_sc_cc.nex;
       charset sc = 1-"""+str(n)+""";
       charset cc = """+str(n+1)+"""-"""+str(n+m)+""";
       partition dtype = 2:sc, cc;
