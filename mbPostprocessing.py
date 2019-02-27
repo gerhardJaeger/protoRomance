@@ -1,28 +1,8 @@
-import pandas as pd
 import numpy as np
 from ete3 import Tree
 
-p1 = pd.read_csv('albanoRomance.run1.p',
-                 sep='\t', skiprows=1)
 
-p2 = pd.read_csv('albanoRomance.run2.p',
-                 sep='\t', skiprows=1)
-
-p3 = pd.read_csv('albanoRomance.run3.p',
-                 sep='\t', skiprows=1)
-
-p4 = pd.read_csv('albanoRomance.run4.p',
-                 sep='\t', skiprows=1)
-
-
-biGen = p1.Gen.max() // 2
-
-pr = pd.concat([p1[p1.Gen > biGen],
-                p2[p2.Gen > biGen],
-                p3[p3.Gen > biGen],
-                p4[p4.Gen > biGen]])
-
-bi = len(pr) // 4
+bi = 2500
 
 trees = []
 with open('albanoRomance.run1.tre') as f:

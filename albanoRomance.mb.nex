@@ -2,7 +2,7 @@
 begin MrBayes;
       execute albanoRomance_sc_cc.nex;
       charset sc = 1-1440;
-      charset cc = 1441-1793;
+      charset cc = 1441-1523;
       partition dtype = 2:sc, cc;
       set partition = dtype;
       unlink Statefreq=(all) shape=(all);

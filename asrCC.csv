@@ -1,5 +1,5 @@
 I,I:11
-blood,blood:1
+blood,blood:3
 bone,bone:2
 breast,breast:2
 come,come:1
@@ -7,7 +7,7 @@ die,die:1
 dog,dog:0
 drink,drink:2
 ear,ear:1
-eye,eye:6
+eye,eye:8
 fire,fire:2
 fish,fish:0
 full,full:2
@@ -23,7 +23,7 @@ name,name:1
 new,new:2
 night,night:0
 nose,nose:3
-one,one:7
+one,one:12
 path,path:2
 person,person:3
 see,see:1
