@@ -1,0 +1,87 @@
+mvi = 0
+mni = 0
+
+# Read in the character data, note there is some missing character data notated by '?'. 
+data = readCharacterData("romanceAlignments.nex")
+
+nchar = data.nchar()
+
+for (c in 1:nchar) {
+  cdata[c] = readCharacterData("romanceAlignments.nex")
+  cdata[c].excludeAll()
+  cdata[c].includeCharacter(c)
+}
+
+# To accommodate for phylogenetic uncertainty, we will run our analyses over a
+# posterior distribution of trees estimated in a previous analysis. We do this
+# by sampling from an empirical tree distribution constructed from the tree trace
+# output of the previous MCMC analysis.
+
+# read in tree trace
+treetrace = treeTrace(readTrees("romance.posterior.tree",
+                                treetype="non-clock"), burnin=0)
+
+# draw a tree from the empirical tree distribution
+psi ~ dnEmpiricalTree(treetrace)
+moves[++mvi] = mvEmpiricalTree(psi, metropolisHastings=FALSE)
+
+
+
+# rate of change
+alpha ~ dnExp(1)
+moves[++mvi] = mvScale(alpha)
+
+beta ~ dnExp(1)
+moves[++mvi] = mvScale(beta)
+
+
+for (i in 1:nchar) {
+  lambda[i] ~ dnGamma(alpha, beta)
+  moves[++mvi] = mvScale(lambda[i])
+}
+
+
+
+
+
+k = 37
+Q := fnJC(k)
+for (c in 1:nchar) {
+  seq[c] ~ dnPhyloCTMC(Q=Q,
+                       tree=psi,
+                       rootFrequencies=simplex(rep(1, k)),
+                       branchRates=lambda[c],
+                       type="Standard")
+  seq[c].clamp(cdata[c])
+}
+
+
+
+
+
+mymodel = model(Q)
+
+# create the monitors
+monitors[++mni] = mnScreen(printgen=10)
+
+monitors[++mni] = mnFile(filename="output/mk1_model.log",
+                         printgen=10)
+monitors[mni].addVariable(alpha)
+monitors[mni].addVariable(beta)
+for (c in 1:nchar) {
+  monitors[mni].addVariable(lambda[c])
+}
+
+
+###############
+# run MCMC analysis
+###############
+
+
+mymcmc = mcmc(mymodel, monitors, moves, nruns=4)
+mymcmc.burnin(generations=1000, tuningInterval=100)
+mymcmc.run(5000)
+
+mymcmc.operatorSummary()
+
+q()
