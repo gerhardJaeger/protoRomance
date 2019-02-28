@@ -36,9 +36,9 @@ def nexCharOutput(chMtx, names, outfile,
     f.close()
 
 
-guideTree = Tree('albanoRomance.mcc.nwk').get_children()[0]
+guideTree = Tree('romance.mcc.nwk')
 
-asrCC = pd.read_csv('asrCC.csv', index_col=0, header=None)[1]
+asrCC = pd.read_csv('asrCC.csv', index_col=0, squeeze=True)
 
 
 romance = np.array(guideTree.get_leaf_names())
@@ -86,58 +86,3 @@ nexCharOutput(aBlocks.values, aBlocks.index,
 
 
 
-# p = Popen('mpirun -np 4 rb-mpi asrSounds.Rev > /dev/null',
-#           shell=True)
-# os.waitpid(p.pid, 0)
-
-posterior = pd.read_csv('output/mk1_model.log',
-                        sep='\t')
-posterior = posterior[posterior.Iteration > posterior.Iteration.max() // 2]
-posterior.index = range(len(posterior))
-
-nChar = aBlocks.shape[1]
-nStates = 37
-
-asr = pd.DataFrame([[posterior['asr['+str(c+1)+']['+str(s+1)+']'].mean()
-                     for s in range(nStates)]
-                    for c in range(nChar)],
-                   index=aBlocks.columns)
-
-
-
-
-# idc = [x for x in results.columns if 'P(1)' in x]
-
-# results = results[idc]
-
-# results.columns = binMtx.columns
-
-# resultsMean = results.mean()
-
-# def recon(res):
-#     asr = []
-#     for x in aBlocks.columns:
-#         idc = [y for y in res.index if ':'.join(y.split(':')[:2])==x]
-#         asr.append(res[idc].sort_values().index[-1].split(':')[-1])
-#     asr = pd.Series(asr,index=aBlocks.columns)
-#     reconstruction = []
-#     for c in concepts:
-#         idc = [x for x in asr.index if x.split(':')[0]==c]
-#         reconstruction.append(''.join(asr[idc].values).replace('0',''))
-#     reconstruction = pd.Series(reconstruction,index=concepts)
-#     return reconstruction
-
-
-# reconstruction = pd.DataFrame(recon(resultsMean))
-
-
-# asjp = pd.read_table('dataset.tab',index_col=0,
-#                      sep='\t')
-
-# reconstruction['Latin'] = asjp.ix['LATIN'][concepts].values
-
-# reconstruction.columns = ['reconstruction','Latin']
-# reconstruction['concept'] = reconstruction.index
-
-# reconstruction[['concept','Latin','reconstruction']].to_csv('reconstruction.csv',
-#                                                             index=False)

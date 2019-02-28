@@ -1,60 +1,13 @@
 #NEXUS
 
 BEGIN DATA;
-DIMENSIONS ntax=50 NCHAR=191;
+DIMENSIONS ntax=3 NCHAR=27;
 FORMAT DATATYPE=STANDARD GAP=? MISSING=- symbols="358CELNSTZabcdefghijklmnopqrstuvwxyz0";
 MATRIX
 
-NEAPOLITAN_CALABRESE       mu0r0i00000k0a0n300re0k0y03p0e0S0300m0a0n30s030n0t000i000k0o0r0n003-------00fE0x0at3p03r0uky030000mu00n0ta053n0o00t3----k0r3stya0n3v0030r00E0000p0E0l300p0rEt000300s0o0l300000l0e0ngw300a0b30r3
-ITALIAN                    mo0r0000000k0a0ne0ore0kky0op0e0S0e00m0a0no---------------k0o0r0n00o-------00fe0g0atop0id0okk0o0000mo00n0ta05an0ot0te---------------v00e0d0000000p0Elle00p0yEtr00a00s0o0le00000l0i0Ngwa00albe0ro
-ITALIAN_GROSSETO_TUSCAN    mo0r0i0re00k0a0ne0ore0k0y0op0e0S0e00m0a0no0s0e0n0t000i0rek0o0r0n00o-------00fe0g0atop0id0oky0o0000mo00nata05an0o00te---------------v00e0dere0000p0E0le-------------s0o0le00000l0i0ngwa0--------
-DALMATIAN                  mo0r0a0r000kuo0N000ra0k0l0ap0ias0000muo0N00s0e0n0t000a0r0k0uar0N000-------00fi0guot0p0ed0okl0o0000mu0an0t0000n0ua0t0---------------v00e0d00a0r00p0ial000p00itr00a00sau0l000000l0a0Ng0a0yarbu0r0
-TURIA_AROMANIAN            -----------------0ureak0L0i---------m0a0na---------------k0o0r0n00u-------layi0k0at0----------0000mu00n00000i-----------------------------------k0a0li00k00itriCa00---------00l0i0m00a0--------
-VLACH                      mo0r0u000--------0uriac0l0ip0e0sku00m0i0naas0e0ult000u000-------------------------------------0000mu00n0d000in0a0pte---------------v00e0d00u0000kia0li00g00e000na00s0uari00000l0i0mb0a00arbo0r0
-ROMANIAN_MEGLENO           mo0r0000000k0oyni0ureak0L03p0eaSti00m0o0n3000u000t0000000k0o0r0n000-----------------p0id0ukL0u0000mu00n0t000in0oapti---------------v00e0t0000000koa0Z3rop0000000300s0oari00000l0i0mb0e00arbu0r0
-ROMANIAN_2                 ---------00k0aine0ure000k0ep0e0Ste00m030n3---------------k0o0r0n000-------00fi0k0at0p0ad0u0k0e0000colin00000an0oapte---------------v00e0d00e0a00pye0le00p0yatr00300s0oare00000l0i0mb0300arbo0re
-ROMANIAN                   mu0r0000000k030ne0ure000k0ep0e0Ste00m030n3---------------k0o0r0n000-------00fi0k0at0p03d0u0k0e0000mu00n0t000en0oapte---------------v00e0d00e0a00p0e0le00p00atr00300s0oare00000l0i0mb030--------
-CORSICAN                   mo0r00000Tak0a0ru0arE000T0ap0E0S0u00m0a0ni0s0E0n0t0000000k0o0r0000i-------00fe0g0atup0id0o0T0u0000mu00n0tanTan0o00ti---------------v00End0000000p0e0di00k00ot000a00s0o0li00000l0i0Ngua00arbu0ru
-SICILIAN_UnnamedInSource   mo0r0i0ri00k0a0ni0ori000kiap0e0S0i00m0a0nu0s0e0n0t000i0rik0o0r0nutu-------00fi0C0atu----------0000mu00n0ta05an0o00ti---------------v00i0diri0000p0e0di00p00etr00a00s0u0li00000l0i0N00a00arbu0lu
-EMILIANO_CARPIGIANO        mu0r0i0r000k0a0N00urE000C0ap0E0s0000m0a0N00s0i0N0t000i0r0k0o0ren000-----------------p0y00o0C000000mu00n0ta05an0o00t0---------------v00E0d00e0r00p0E0la00jar00000owns0o0l000000l0E0Ngva00elbe0r0
-EMILIANO_REGGIANO          mu0r0i0r000k0a0n00urE000C0ap0E0s0000m0a0n00s0Eyn0t000e0r0k0o0ren000-----------------p0y00o0C000000mu00n0ta05an0o00t0---------------v00E0d00e0r00p0E0la00p0re0d00a00s0owl000000l0E0Ngwa00Elbe0r0
-PIEMONTESE_VERCELLESE      mo0r0i00000k0a0N00uro000Z0ap0o0s0000m0a0N00s0e0N0t000i000k0o0r0n00u-----------------p0y00o0C000000mu00N0ta05an0o00C0---------------v00o0g00i0000p0E0l000p0rE0y00a00s0u0l000000l0e0Ngwa0--------
-LOMBARD_BERGAMO            mo0r0000000k0a0000orE000j0ap0E0s0000m0a0000s0i0n0t000i000k0o0ren000-----------------p0y00o0C000000mo00n0ta05an0o00C0---------------000E0t0000000p0E0l000p0re0d00a00s0u0l000000l0E0ngwa0--------
-LOMBARD_PLESIO             mu0r0i00000k0a0N00urE000j0ap0E0s0000m0a0N00s0e0n0t000i000k0o0r0n00u-----------------p0y00o0C000000mu00n0ta05an0o00C0---------------v00e0d00E0000p0E0l0-------------s0u0u000000l0e0ngwa0--------
-PIEMONTESE_BARBANIA        moyr0e00000k0a0N00uri000y0ap030s0000m0a0N00s0E0N0t000e000k0o0r0n000-----------------p0000u0y000000mu00N0ta05an0oy0t0---------------v0030d00e0000p0E0l000p00E0r00a00s0u0l000000l0E0Ng0a00Erbu000
-PIEMONTESE_CARMAGNOLA      moyr0e00000k0a0N00uri000y0ap0E0s0000m0a0N00s0E0N0t000e000k0o0r0n000-----------------p0000u0y000000mu00N0ta05an0oy0t0---------------v0030d00e0000p0E0l000p00e0r00a00s0u0l000000l0e0Ng0a00Erbu000
-PIEMONTESE_LANZO_TORINESE  moyr0e00000k0a0N00uri000y0ap0E0S0000m0a0N00s0E0N0t000e000k0o0r0n000-----------------p0000u0y000000mu00N0ta05an0oy0t0---------------v0030d00i0000p0E0l000p00E0r00a00s0u0l000000l0E0Ng0a0--------
-EMILIANO_FERRARESE         mu0r0i0r000k0a0n00urE000C0ap0E0s0000m0a0ns0s0i0n0t000i0r0k0o0ran000-------00fE0g0at0v0d00o0C000000mu00n0ta05an0o00t0----0000stya0n0v00E0d00a0r00p0e0l000p0rE0d00a00s0o0l000000l0E0Ngwa00arbu0l0
-ROMAGNOL_RAVENNATE         mu0r0i00000k0a0n00urE000C0ap0E0s0000m0a0n00s0i0n0t000i000k0o3ran000-------00fe0g0at0b0d00o0C000000mo0wn0t0000n0o00ta----0000sC0a0n0v0000d00e0000p0e3la-------------s0owl000000l0e0ngva0e3lba0r0
-NONES                      mo0r0i0r000c0ain000re0k0l0ap0e0s0000m0a0n00s0e0n00000i0r0k0o0r0n000-------00fi0c0a00p0i00o0cEl0000mo00n000000n0o00t0---------------v00e0d00E0r00p0E0l0-------------s0o0l000000l0E0N00a00arbo0l0
-LIGURIAN_GENOESE           mu000i00000k0a0N00w0E000j0ap0e0S0u00m0a0N00s0e0N0t000i000k0o0r0n00u-------00fe0g0atup0ig0E0j0u---------------n0E00te---------------v00e0d00e0000p0e0le00p0ri0000a00s0u00000000l0i0Ngwa00erbu000
-LIGURIAN_STELLA            mi000i00000k0a0N00w0e000j0ap0E0S0u00m0a0N00s0e0N0t000i000k0o0r0n00u-------00fe0g0atup0y00E0j0u---------------n0E00Ce----k0ristya0N0v0yE0y0000000p0E0le00p0rE0y00a00s0u00000000l0E0Ngwa00Erbu000
-LIGURIAN_RAPALLO           mu000i00000k0a0N0aw0e000j0ep0E0S0u00m0a0N00s0e0N0t000i000k0o0r0n00u-------00fi0g0Etup0ig0E0j0u0000mu00n0ta05an0E00te---------------v00e0d00e0000p0e0le00p0ri0000a00s0u00000000l0i0Ngwa00Erbu000
-SARDINIAN                  mo0r0e0re00k0a0ne0uri000g0ap0i0S0e00m0a0nu000i0n0tende0rek0o0r0000u-------00fi0g0adupri00o0g0u0000mu00n0ta05an0o00te---------------bi0e000000r0ep0e0de00p00edr00a00s0o0le00000l0i0mb0a00arvu0re
-SARDINIAN_LOGUDARESE       mo0r0e0re00k0a0ne0ori000krap0i0ske00m0a0nu000i0n0tende0rek0o0r0000u-------00fi0k0adupre00u0k0u0000mo00n0t000en0o00te---------------bi0e000000r0ep0e0de00p00e0r0da00s0o0le00000l0i0mb0a00arvu0re
-SARDINIAN_CAMPIDANESE      mo0r0i00000k0a00i0ori000x0ap0i0S0i00m0a0nu000i0n0tEnd000ik0o0r0000u-------00fi0g0aw0pri00o0x0u0000mo00n0t000in0o00ti---------------b00i000000r0ip0E0di00p00e0r0da00s0o0li00000l0i0mb0a0--------
-ARAGONESE                  mo0r0i0r000k0a0n00ore000L0ap0e0S0000m0a0n00s0e0n0t000i0r0k0e0r0n00o-------00fi0g0adop0eg0o0L0o0000mo00n000000n0ueit0---------------beye000000r00pie0l000p00e0500a00s0o0l000000lue0Ng0a00arbo0l0
-JUDEO_ESPAGNOL             mu0r0i0r0--------0ore000x0ap0e0Skadom0a0no---------------k0uer0n00orodiyas000i0g0adop0i00o0x0o0000mo00n0ta05an0o00Ce---------------v00e000000r00------00p0yedr00a00s0o0l000000l0i0ngua00arvo0le
-SPANISH                    mo0r0i000--------0ore000h0ap0e0skadom0a0no---------------k0e0r0n00orodiya0000i0g0adop0i00o0h0o0000s000000e0ron0o00Ce---------------v00e000000000pie0l000p0iedr00a00s0o0l000000l0e0ng0a00arbo0l0
-ASTURIAN                   mo0rre0r0--------0ore000y0ap0e0S0e00m0a0no---------------k0uer0n00urodi0a0----------p0i00o0y0u0000mo00n0t000en0ue0Ce---------------v00e000000r00pie0l000p0iedr00a00s0o0l0000pal0a00d0ar0arbo0l0
-PORTUGUESE                 mu0r0000000k0a0u00ora000L0apai0S0300m0a0u0---------------S0ifr00003-------00fi0x0a8up0i00o0L0u0000mo0000ta05an0oy0t3---------------v00e000000r00p0E0l300p00Edr00a00s0o0l000000l0i00gua00Ervu0r3
-GALICIAN                   mo0r0e0r000k0a0n00orE000L0ap0EiS0e00m0a0n0---------------k0o0r0n00o-------00fi0g0adop0i00o0L0o0000mo00n0ta05an0oi0te---------------b00e000000r00p0E0l000p00Edr00a00s0o0l000000l0i0Ng0a00arbo0re
-VALENCIAN                  mo0r0i0r000g0o0s00orE000L0ap0eiS0000m0a0000s0e0n0t000i0r0-------------------------------------0000mu00n0ta05an0i00t0---------------v00E0000u0r0ep0e0L000p00e8r00a00s0o0l000000L0e00g0a00arb00re
-CATALAN_2                  mu0r0i00000g0o0s00urE000L03p0e0S0000m0a0000s030n0t000i000-----------------00fe0j0300p0000o0L000000mu00n0ta053n0i00t0---------------b00E0000u0r03p0e0L000p00e8r00300s0o0l000000L0e00g0300a0b00r3
-CATALAN                    mu0r0i00000g0o0s00urE000L03p0e0S0000m0a0000s030n0t000i000k0o0r0n000-------00fe0j0300p0000o0L000000mo00n000000n0i00t0---------------b00E0000u0r03p0e0L000p00e8r00300s0o0l000000L0e0Ng0300a0b00r3
-BALEAR_CATALAN             mu0r0i00000k0a0000orE000L03p0eiS0000m0a0000s030n0t000i000-------------------------------------0000mu00n0ta053n0i00t0---------------v00E0000u0r03p0e0L000p00edr00300s0o0l000000L0e00g0300a0b00r3
-ARPITAN                    mo0r0i00000S0i0000or3000L03p030s0o00m0a000000e0kot000a000-------------------------------------0000mo0000ta05in0E0000---------------v00E00000000a------00p00E0r00i00s0o0lE0L000l0E00w0a00a0b00ro
-FRENCH                     mu0r0i00000Sia0000ore000000p0a0s0o00m0a000000o000t000adr0k0o0r0n000-------00f0000a00p0000u00000000mo0000ta0j0nui0000---------------v00a000000000p0o00000p00e0r00000s0o0le00000l0a00g0000arb00r3
-LANGUEDOCIEN               ---------00k0a000awre000L0op0eys0000m0a000---------------k0o0r0n00o-------00fe0j0e00p0ez0u0l000000mu00n0ta05o50o00C0---------------b00e000000yrep0e0l000p00Eyr00o00s0u0le0l000l0e00N0o00arb00re
-GASCON                     ---------00k0a000aure000y0op0E0S0000m0a000---------------k0o0r0n00o-------00hi0C0e00p0ed0u0i000000mu00n0ta05onwoy0t0---------------b00e000000z0ep0E0t000p00Eir00o00s0u0re0L000l0e00N0o00arb000e
-OCCITAN_ARANESE            mu0r0i00000k0a0N0aure000L0op0eiS0000m0a0N00ene0n00000e000k0o0r0n00o---------------------------0000mu00n00a05on0e0000---------------b00e00000080ep0E0t000p00Eir00o00s0u00000000l0e00Nuo00arb000e
-FRIULIAN                   mu0r0e0i000C0a0N00ore000l0ip0e0s0000m0a0n00s0i0n0t000e0i0k0a0r00000-------00fi000at0p0Ed0o0l0i0000mo00n0t000050o00t0---------------v00iod00i0000p0e0l000p00e0r00E00s0o0re0li00l0e0Ng0E00arbu0l0
-NONES_GARDENESE            mu0r0i00000T0a0500ur30d0l0ap030S0000m0a050---------------k0o0r0n000-------00foSk0000p0000odl00---------------nwe00t0---------------000u0d0030y00p0e0l0-------------s0u0r3dl000l030Ng0a0--------
-NONES_FASSANO              mo0r0i00000T0a0500ure000y0ap0e0S0000m0a0500s0e0n0t000i0r0k0o0r0n000-------00neyg0Er0p0000o0y0e---------------n0e00t0---------------v00e0d00e0r00p0e0l0-------------s0o0re0ye-------------------
-ROMANSH_SURMIRAN           mu0r0Ekr000T0a0N00ure000y03p0e0S0000m0a0N00s0a0n0tk00E0r0k0o0r0n003-----------------p00l0u0L000000mu00n0to053n0o00T0vey3k3r0st0a0N0v00E0000k0r00p0e0l0-------------s0u0Le0L000L0a0Ng030--------
-ROMANSH_SURSILVAN          mu0r0i0r000C0aun00ure000L03p0E0S0000m0aun0---------------Cie0r0n000-----------------p00l0u0L00kuolm0000000000n0o00C0---------------v0030z00E0r00p0a0l0-------------s0u0lE0L000l0EuNg0a0--------
-ROMANSH_GRISHUN            mu0r0i0r000T0awn00ure000L03p0e0S0000m0awn0---------------k0o0r0n003-----------------p00l0u0L000000mu00n0to053n0o00T0vi03k3r0ST0awn0v0030z00ayr00p0e0l0-------------s0u0le0L000lyewNg030--------
-ROMANSH_VALLADER           mu0r0i0r000S0a0n00ura000L03p0e0S0000m0a0n0---------------k0o0r0n003-----------------p00lwo0L000000mu00n0to053n0o00t0vi03-----------v0030C00e0r00p0e0l0-------------s0u0la0y000l0e0w0030000bEsS0
+ALBANIAN       viy-------Tennat3dipeSk----
+ALBANIAN_TOSK  viy--plot3TEnnat3dupESk----
+ALBANIAN_GHEG  ---iL-----qennat3dipeSkgerb
 
 ;
 

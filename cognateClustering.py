@@ -4,6 +4,7 @@ import pandas as pd
 from Bio import pairwise2
 from sklearn.linear_model import LogisticRegression
 import igraph
+import string
 
 
 pyrandom.seed(12345)
@@ -21,13 +22,21 @@ gp2 = -1.70573165621
 ## Missing entries are assumed to be coded as "-1"
 
 
-def nexCharOutput(chMtx, names, outfile, datatype='STANDARD'):
+def nexCharOutput(chMtx, names, outfile,
+                  datatype='STANDARD',
+                  symbols=[],
+                  gap='?',
+                  missing='-'):
     f = open(outfile, 'w')
     f.write('#NEXUS\n\n')
     f.write('BEGIN DATA;\n')
-    f.write('DIMENSIONS ntax=' + str(len(chMtx)) + ' NCHAR=' +
+    f.write('DIMENSIONS ntax=' + str(len(chMtx))+' NCHAR=' +
             str(len(chMtx.T))+';\n')
-    f.write('FORMAT DATATYPE='+datatype+' GAP=? MISSING=- interleave=yes;\n')
+    ln = 'FORMAT DATATYPE='+datatype+' GAP='+gap+' MISSING='+missing
+    if len(symbols) > 0:
+        ln += ' symbols=\"' + ''.join(symbols) + '\"'
+    ln += ';\n'
+    f.write(ln)
     f.write('MATRIX\n\n')
     txLgth = max(map(len, names))
     for i in range(len(chMtx)):
@@ -149,9 +158,32 @@ for c in concepts:
     cMtx = cMtx.reindex(taxa, fill_value='-')
     ccMtx = pd.concat([ccMtx, cMtx], axis=1)
 
-ccMtx.to_csv('albanoRomanceCCbin.csv')
+# ccMtx.to_csv('albanoRomanceCCbin.csv')
 
 nexCharOutput(ccMtx.values, ccMtx.index, 'albanoRomanceCC.nex')
 
-#ccData = ccData.sort_values('cc')
 ccData.to_csv('albanoRomanceCC.csv', index='False')
+
+ccData['ccCode'] = [string.ascii_lowercase[i]
+                    for i in
+                    [int(x.split(':')[1]) for x in ccData.cc.values]]
+
+romance = np.array([l for l in taxa
+                    if 'ALBANIAN' not in l])
+
+romanceMultiMtx = pd.DataFrame()
+for c in concepts:
+    cData = ccData[ccData.concept == c]
+    cl = pd.Series(cData.ccCode.values,
+                   index=cData.language).reindex(romance,
+                                                 fill_value='-')
+    romanceMultiMtx = pd.concat([romanceMultiMtx,
+                                 cl], axis=1)
+romanceMultiMtx.columns = concepts
+
+# nexCharOutput(romanceMultiMtx.values,
+#               romanceMultiMtx.index,
+#               'romanceMulti.nex',
+#               symbols=string.ascii_lowercase[:11])
+
+romanceMultiMtx.to_csv('romanceMultiMtx.csv')
