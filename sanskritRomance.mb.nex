@@ -9,7 +9,7 @@ begin MrBayes;
       lset applyto=(all) rates=gamma;
       lset applyto=(1) coding=all;
       lset applyto=(2) coding=noabsencesites;
-      constraint romance = 4-.;
+      constraint romance = 2-.;
       prset topologypr = constraints(romance);
       report applyto=(2) ancstates=yes;
       mcmcp stoprule=no stopval = 0.01 filename = sanskritRomance nruns=4;
