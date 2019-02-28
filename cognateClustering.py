@@ -125,7 +125,7 @@ synpairs['prediction'] = lr.predict_proba(np.c_[synpairs.PMI.values])[:, 1]
 
 
 ccData = pd.DataFrame()
-th = 0.25
+th = 0.5
 for c in concepts:
     cData = data[data.concept == c].copy()
     cPairs = synpairs[synpairs.concept == c]
@@ -162,9 +162,9 @@ for c in concepts:
 
 nexCharOutput(ccMtx.values, ccMtx.index, 'albanoRomanceCC.nex')
 
-ccData.to_csv('albanoRomanceCC.csv', index='False')
+ccData.sort_values('cc').to_csv('albanoRomanceCC.csv', index='False')
 
-ccData['ccCode'] = [string.ascii_lowercase[i]
+ccData['ccCode'] = [string.ascii_letters[i]
                     for i in
                     [int(x.split(':')[1]) for x in ccData.cc.values]]
 
@@ -184,6 +184,6 @@ romanceMultiMtx.columns = concepts
 # nexCharOutput(romanceMultiMtx.values,
 #               romanceMultiMtx.index,
 #               'romanceMulti.nex',
-#               symbols=string.ascii_lowercase[:11])
+#               symbols=string.ascii_letters[:11])
 
 romanceMultiMtx.to_csv('romanceMultiMtx.csv')
