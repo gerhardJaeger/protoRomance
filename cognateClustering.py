@@ -153,5 +153,5 @@ ccMtx.to_csv('albanoRomanceCCbin.csv')
 
 nexCharOutput(ccMtx.values, ccMtx.index, 'albanoRomanceCC.nex')
 
-ccData = ccData.sort_values('cc')
+#ccData = ccData.sort_values('cc')
 ccData.to_csv('albanoRomanceCC.csv', index='False')

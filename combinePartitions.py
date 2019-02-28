@@ -47,6 +47,7 @@ n = len(sc.values[0][0])
 m = len(cc.values[0][0])
 
 romance = [l for l in cc.index if 'ALBANIAN' not in l]
+albanian = [l for l in cc.index if 'ALBANIAN' in l]
 
 mbCommands = """#NEXUS
 begin MrBayes;
@@ -59,7 +60,10 @@ begin MrBayes;
       lset applyto=(all) rates=gamma;
       lset applyto=(1) coding=all;
       lset applyto=(2) coding=noabsencesites;
-      constraint romance = """+' '.join(romance)+""";
+"""
+for l in albanian:
+    mbCommands += "      outgroup "+l+";\n"
+mbCommands += """      constraint romance = """+' '.join(romance)+""";
       prset topologypr = constraints(romance);
       report applyto=(2) ancstates=yes;
       mcmcp stoprule=no stopval = 0.01 filename = albanoRomance nruns=4;
