@@ -60,8 +60,6 @@ begin MrBayes;
       lset applyto=(all) rates=gamma;
       lset applyto=(1) coding=all;
       lset applyto=(2) coding=noabsencesites;
-      prset brlenspr = clock:uniform;
-      prset clockvarpr = igr;
       constraint romance = """+' '.join(romance)+""";
       constraint albanian = """+' '.join(albanian)+""";
       prset topologypr = constraints(romance, albanian);
