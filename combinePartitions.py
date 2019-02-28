@@ -46,7 +46,6 @@ nexCharOutput(scCC.values, scCC.index, 'albanoRomance_sc_cc.nex',
 n = len(sc.values[0][0])
 m = len(cc.values[0][0])
 
-romance = [l for l in cc.index if 'ALBANIAN' not in l]
 albanian = [l for l in cc.index if 'ALBANIAN' in l]
 
 mbCommands = """#NEXUS
@@ -63,10 +62,7 @@ begin MrBayes;
 """
 for l in albanian:
     mbCommands += "      outgroup "+l+";\n"
-mbCommands += """      constraint romance = """+' '.join(romance)+""";
-      prset topologypr = constraints(romance);
-      report applyto=(2) ancstates=yes;
-      mcmcp stoprule=no stopval = 0.01 filename = albanoRomance nruns=4;
+mbCommands += """      mcmcp stoprule=no stopval = 0.01 filename = albanoRomance nruns=4;
       mcmcp mcmcdiagn=yes diagnfreq=10000 samplefreq=10000 burninfrac=.5;
       set seed=12345;
       set swapseed=12345;
