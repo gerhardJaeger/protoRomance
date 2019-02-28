@@ -1,3 +1,4 @@
+seed(12345)
 mvi = 0
 mni = 0
 
@@ -6,11 +7,11 @@ data = readCharacterData("romanceAlignments.nex")
 
 nchar = data.nchar()
 
-for (c in 1:nchar) {
-  cdata[c] = readCharacterData("romanceAlignments.nex")
-  cdata[c].excludeAll()
-  cdata[c].includeCharacter(c)
-}
+## for (c in 1:nchar) {
+##   cdata[c] = readCharacterData("romanceAlignments.nex")
+##   cdata[c].excludeAll()
+##   cdata[c].includeCharacter(c)
+## }
 
 # To accommodate for phylogenetic uncertainty, we will run our analyses over a
 # posterior distribution of trees estimated in a previous analysis. We do this
@@ -29,48 +30,65 @@ moves[++mvi] = mvEmpiricalTree(psi, metropolisHastings=FALSE)
 
 # rate of change
 alpha ~ dnExp(1)
-moves[++mvi] = mvScale(alpha)
-
-beta ~ dnExp(1)
-moves[++mvi] = mvScale(beta)
+moves[++mvi] = mvScale(alpha, lambda=1.0)
 
 
-for (i in 1:nchar) {
-  lambda[i] ~ dnGamma(alpha, beta)
-  moves[++mvi] = mvScale(lambda[i])
-}
+rateMultiplier ~ dnExp(1)
+moves[++mvi] = mvScale(rateMultiplier, lambda=1.0)
 
+
+alpha_prior_mean <- ln(5.0)
+alpha_prior_sd <- 0.587405
+alpha ~ dnLognormal(alpha_prior_mean, alpha_prior_sd)
+sr := fnDiscretizeGamma(alpha, alpha, 4)
+moves[++mvi] = mvScale(alpha, lambda=1.0)
 
 
 
 
 k = 37
-Q := fnJC(k)
-for (c in 1:nchar) {
-  seq[c] ~ dnPhyloCTMC(Q=Q,
-                       tree=psi,
-                       rootFrequencies=simplex(rep(1, k)),
-                       branchRates=lambda[c],
-                       type="Standard")
-  seq[c].clamp(cdata[c])
+
+for (i in 1:3) {
+    rates[i] ~ dnLoguniform(0.001, 10)
+    moves[++mvi] = mvScale(rates[i], lambda=1)
 }
 
+for (i in 1:k) {
+    for (j in 1:k) {
+        if (i == j) q[i][j] := 0.0
+        if (i != j & i == k) q[i][j] := rates[1]
+        if (i != j & j == k) q[i][j] := rates[2]
+        if (i != j & i < k & j < k) q[i][j] := rates[3]
+    }
+}
+Q := fnFreeK(q)
+                
+nrates[1] := Q[1][k]*rateMultiplier
+nrates[2] := Q[k][1]*rateMultiplier
+nrates[3] := Q[1][2]*rateMultiplier
 
 
+seq ~ dnPhyloCTMC(Q=Q,
+                  tree=psi,
+                  rootFrequencies=simplex(rep(1, k)),
+                  siteRates=sr,
+                  branchRates=rateMultiplier,
+                  type="Standard")
+seq.clamp(data)
 
 
-mymodel = model(Q)
+siteRates := seq.siteRates()
 
-# create the monitors
-monitors[++mni] = mnScreen(printgen=10)
 
-monitors[++mni] = mnFile(filename="output/mk1_model.log",
+mymodel = model(seq)
+
+monitors[++mni] = mnScreen(printgen=1)
+
+monitors[++mni] = mnFile(filename="output/soundRates.log",
                          printgen=10)
 monitors[mni].addVariable(alpha)
-monitors[mni].addVariable(beta)
-for (c in 1:nchar) {
-  monitors[mni].addVariable(lambda[c])
-}
+monitors[mni].addVariable(nrates)
+monitors[mni].addVariable(siteRates)
 
 
 ###############
@@ -78,9 +96,8 @@ for (c in 1:nchar) {
 ###############
 
 
-mymcmc = mcmc(mymodel, monitors, moves, nruns=4)
-mymcmc.burnin(generations=1000, tuningInterval=100)
-mymcmc.run(5000)
+mymcmc = mcmcmc(mymodel, monitors, moves, nruns=4, nchains=4)
+mymcmc.run(2000)
 
 mymcmc.operatorSummary()
 
