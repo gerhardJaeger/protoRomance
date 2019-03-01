@@ -1,4 +1,4 @@
-from numpy import *
+import numpy as np
 import pandas as pd
 import Levenshtein
 import re
@@ -7,37 +7,41 @@ import re
 def cleanASJP(word):
     """takes an ASJP string as argument
     and returns the string with all diacritics removed."""
-    word = re.sub(r",","-",word)
-    word = re.sub(r"\%","",word)
-    word = re.sub(r"\*","",word)
-    word = re.sub(r"\"","",word)
-    word = re.sub(r".~","",word)
-    word = re.sub(r"(.)(.)(.)\$",r"\2",word)
-    word = re.sub(r"\$","",word)
-    word = re.sub(r"\s+","",word)
-    return word.replace('~','')
-
-asjp = pd.read_table('dataset.tab',index_col=0,
-                     sep='\t',na_filter=False)
+    word = re.sub(r",", "-", word)
+    word = re.sub(r"\%", "", word)
+    word = re.sub(r"\*", "", word)
+    word = re.sub(r"\"", "", word)
+    word = re.sub(r".~", "", word)
+    word = re.sub(r"(.)(.)(.)\$", r"\2", word)
+    word = re.sub(r"\$", "",  word)
+    word = re.sub(r"\s+", "", word)
+    return word.replace('~', '')
 
 
-romance = array([x for x in asjp[asjp.wls_gen=='ROMANCE'].index
-                 if x!='LATIN'])
+asjp = pd.read_table('dataset.tab',
+                     index_col=0,
+                     sep='\t',
+                     na_filter=False)
 
 
+reconstruction = pd.read_csv('protoRomance.csv', index_col=0)
+
+concepts = np.array(reconstruction.index)
+
+reconstruction['Latin'] = asjp[concepts].loc['LATIN'].values
 
 
-reconstruction = pd.read_csv('reconstruction.csv',index_col=0)
-
-concepts = array(reconstruction.index)
-
-def ldn(a,b):
-    return min([1.*Levenshtein.distance(x,y)/max(len(x),len(y))
+def ldn(a, b):
+    return min([1.*Levenshtein.distance(x, y)/max(len(x), len(y))
                 for x in a.split('-') for y in b.split('-')])
 
 
+romance = np.array([lg for lg in asjp[asjp.wls_gen == "ROMANCE"].index
+                    if lg != 'LATIN'])
+
+
 romanceCleaned = pd.DataFrame([[cleanASJP(x).split('-')[0] for x in y]
-                               for y in asjp.ix[romance][concepts].values],
+                               for y in asjp.loc[romance][concepts].values],
                               index=romance,
                               columns=concepts)
 
@@ -45,14 +49,15 @@ latinCleaned = pd.Series([cleanASJP(x) for x in reconstruction.Latin.values],
                          index=reconstruction.index)[concepts]
 
 
+reconEval = np.mean([ldn(x, y)
+                     for x, y in zip(reconstruction.reconstruction.values,
+                                     latinCleaned.values)])
 
-reconEval = mean([ldn(x,y) for x,y in zip(reconstruction.reconstruction.values,
-                                          latinCleaned.values)])
-
-romanceEval = pd.Series([mean([ldn(romanceCleaned.ix[l][c],latinCleaned[c])
-                               for c in concepts])
+romanceEval = pd.Series([np.mean([ldn(romanceCleaned.loc[l][c],
+                                      latinCleaned[c])
+                                  for c in concepts])
                          for l in romance],
                         index=romance)
-romanceEval.ix['Proto-Romance'] = reconEval
+romanceEval.loc['Proto-Romance'] = reconEval
 
 romanceEval.to_csv('romanceEvaluation.csv')

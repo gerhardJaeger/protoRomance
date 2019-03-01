@@ -181,9 +181,9 @@ for c in concepts:
                                  cl], axis=1)
 romanceMultiMtx.columns = concepts
 
-# nexCharOutput(romanceMultiMtx.values,
-#               romanceMultiMtx.index,
-#               'romanceMulti.nex',
-#               symbols=string.ascii_letters[:11])
+nexCharOutput(romanceMultiMtx.values,
+              romanceMultiMtx.index,
+              'romanceMulti.nex',
+              symbols=string.ascii_letters[:11])
 
 romanceMultiMtx.to_csv('romanceMultiMtx.csv')
