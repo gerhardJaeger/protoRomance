@@ -7,7 +7,7 @@ using Random;
 Random.seed!(12345);
 R"library(ape)";
 
-const N = 100;
+const N = 1000;
 
 const posteriorFull = CSV.read("output/soundRates.log", delim='\t');
 const posterior = posteriorFull[posteriorFull.Iteration .>
@@ -24,7 +24,7 @@ const nChars = size(data)[2];
 #   - 1..n: tips
 #   - n+1..2n-1: internal nodes, mother before daughters
 
-const k = 37;
+const k = length(states);
 
 
 asr = zeros((N, nChars, k));
