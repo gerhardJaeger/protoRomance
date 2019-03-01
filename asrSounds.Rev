@@ -29,9 +29,6 @@ moves[++mvi] = mvEmpiricalTree(psi, metropolisHastings=FALSE)
 
 
 # rate of change
-alpha ~ dnExp(1)
-moves[++mvi] = mvScale(alpha, lambda=1.0)
-
 
 rateMultiplier ~ dnExp(1)
 moves[++mvi] = mvScale(rateMultiplier, lambda=1.0)
@@ -82,7 +79,7 @@ siteRates := seq.siteRates()
 
 mymodel = model(seq)
 
-monitors[++mni] = mnScreen(printgen=1)
+monitors[++mni] = mnScreen(printgen=10)
 
 monitors[++mni] = mnFile(filename="output/soundRates.log",
                          printgen=10)
@@ -97,6 +94,7 @@ monitors[mni].addVariable(siteRates)
 
 
 mymcmc = mcmcmc(mymodel, monitors, moves, nruns=4, nchains=4)
+mymcmc.burnin(500, tuningInterval=100)
 mymcmc.run(2000)
 
 mymcmc.operatorSummary()

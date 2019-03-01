@@ -7,7 +7,7 @@ using Random;
 Random.seed!(12345);
 R"library(ape)";
 
-const N = 1000;
+const N = 10;
 
 const posterior = CSV.read("output/ccRates.log", delim='\t');
 const treetrace = CSV.read("romance.posterior.tree", delim='\t')[1];

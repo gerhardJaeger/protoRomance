@@ -76,7 +76,7 @@ monitors[mni].addVariable(siteRates)
 ###############
 
 
-mymcmc = mcmc(mymodel, monitors, moves, nruns=4)
+mymcmc = mcmcmc(mymodel, monitors, moves, nruns=4, nchains=4)
 mymcmc.burnin(1000, tuningInterval=100)
 mymcmc.run(5000)
 
