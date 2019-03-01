@@ -44,46 +44,37 @@ dataset.tab (ASJP v. 17, accessed from asjp.clld.org on 8/2/16)
 ## Intermediate results
 
 - pmi-albanoRomance.csv (PMI scores)
-  albanoRomanceASJP.csv (word lists used)
-  albanoRomanceSC.nex (character matrix)
-  albanoRomance.wordpairs.csv (word pairs with PMI similarities, used for cognate
-       clustering)
-  albanoRomanceCC.nex (character matrix)
-  albanoRomanceCCbin.csv (character matrix)
-  albanoRomanceCC.csv (word lists with inferred class labels)
-  albanoRomance_sc_cc.nex (combined character matrix)
+- albanoRomanceASJP.csv (word lists used)
+- albanoRomanceSC.nex (character matrix)
+- albanoRomance.wordpairs.zip (word pairs with PMI similarities, used for cognate clustering; zipped csv file)
+- albanoRomanceCC.nex (character matrix)
+- albanoRomanceCCbin.csv (character matrix)
+- albanoRomanceCC.csv (word lists with inferred class labels)
+- albanoRomance_sc_cc.nex (combined character matrix)
 - albanoRomance.run1.p (MrBayes output)
-  albanoRomance.run1.t (MrBayes output)
-  albanoRomance.run2.p (MrBayes output)
-  albanoRomance.run2.t (MrBayes output)
-  albanoRomance.ckp (MrBayes output)
-  albanoRomance.con.tre (MrBayes output)
-  albanoRomance.parts (MrBayes output)
-  albanoRomance.mcmc (MrBayes output)
-  albanoRomance.trprobs (MrBayes output)
-  albanoRomance.tstat (MrBayes output)
-  albanoRomance.vstat (MrBayes output)
-
-- 
-  albanoRomance.run1.tre (MrBayes output, converted to Newick)
-  albanoRomance.run2.tre (MrBayes output, converted to Newick)
-
+- albanoRomance.run1.t (MrBayes output)
+- albanoRomance.run2.p (MrBayes output)
+- albanoRomance.run2.t (MrBayes output)
+- albanoRomance.ckp (MrBayes output)
+- albanoRomance.con.tre (MrBayes output)
+- albanoRomance.parts (MrBayes output)
+- albanoRomance.mcmc (MrBayes output)
+- albanoRomance.trprobs (MrBayes output)
+- albanoRomance.tstat (MrBayes output)
+- albanoRomance.vstat (MrBayes output)
+- albanoRomance.run1.tre (MrBayes output, converted to Newick)
+- albanoRomance.run2.tre (MrBayes output, converted to Newick)
 - albanoRomance.posterior.tree (posterior sample)
-  romance.posterior.tree (posterior sample, rooted and pruned to Romance)
-  romance.posterior.nex.tree (posterior sample, rooted and pruned to Romance, Nexus format)
-
+- romance.posterior.tree (posterior sample, rooted and pruned to Romance)
+- romance.posterior.nex.tree (posterior sample, rooted and pruned to Romance, Nexus format)
 - albanoRomance.mcc.tre (maximum clade credibility tree, Nexus format)
-  albanoRomance.mcc.nwk (maximum clade credibility tree, Newick format)
-
+- albanoRomance.mcc.nwk (maximum clade credibility tree, Newick format)
 - romanceCC.tsv (character matrix for BayesTraits)
-
 - romanceCC.tsv.log.txt (BayesTraits log file)
-
 - asrCC.csv (ASR for cognate classes)
-
 - romanceAlignments.nex (character matrix)
-  romanceAlignments.tsv (character matrix for BayesTraits)
-  romanceAlignments.tsv.log.txt (BayesTraits log file)
+- romanceAlignments.tsv (character matrix for BayesTraits)
+- romanceAlignments.tsv.log.txt (BayesTraits log file)
 
 ## Final results
 

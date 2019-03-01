@@ -1,6 +1,6 @@
 library(ape)
 
-tr <- read.nexus('romance.mcc.tre')
-write.tree(tr,'romance.mcc.nwk')
+tr <- read.nexus('albanoRomance.mcc.tre')
+write.tree(tr,'albanoRomance.mcc.nwk')
 
 

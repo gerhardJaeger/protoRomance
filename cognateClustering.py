@@ -1,17 +1,20 @@
 import random as pyrandom
-import numpy as np
+pyrandom.seed(12345)
+from numpy import *
+random.seed(12345)
 import pandas as pd
 from Bio import pairwise2
+from sklearn.metrics import precision_recall_curve
 from sklearn.linear_model import LogisticRegression
 import igraph
-import string
+from scipy import stats
+import tempfile
+from ete2 import Tree
+import subprocess
+import os
 
-
-pyrandom.seed(12345)
-np.random.seed(12345)
-
-gp1 = -2.49302792222
-gp2 = -1.70573165621
+gp1=-2.49302792222
+gp2=-1.70573165621
 
 
 # Function: nexCharOutput
@@ -20,30 +23,19 @@ gp2 = -1.70573165621
 ## and the name of the output nexus file as input
 ## and writes the character matrix into a nexus file.
 ## Missing entries are assumed to be coded as "-1"
-
-
-def nexCharOutput(chMtx, names, outfile,
-                  datatype='STANDARD',
-                  symbols=[],
-                  gap='?',
-                  missing='-'):
-    f = open(outfile, 'w')
+                   
+def nexCharOutput(chMtx,names,outfile,datatype='STANDARD'):
+    f = open(outfile,'w')
     f.write('#NEXUS\n\n')
     f.write('BEGIN DATA;\n')
-    f.write('DIMENSIONS ntax=' + str(len(chMtx))+' NCHAR=' +
-            str(len(chMtx.T))+';\n')
-    ln = 'FORMAT DATATYPE='+datatype+' GAP='+gap+' MISSING='+missing
-    if len(symbols) > 0:
-        ln += ' symbols=\"' + ''.join(symbols) + '\"'
-    ln += ';\n'
-    f.write(ln)
+    f.write('DIMENSIONS ntax='+str(len(chMtx))+' NCHAR='+str(len(chMtx.T))+';\n')
+    f.write('FORMAT DATATYPE='+datatype+' GAP=? MISSING=- interleave=yes;\n')
     f.write('MATRIX\n\n')
-    txLgth = max(map(len, names))
-    for i in range(len(chMtx)):
+    txLgth = max(map(len,names))
+    for i in xrange(len(chMtx)):
         f.write(names[i].ljust(txLgth+2))
         for ch in chMtx[i]:
-            if ch == -1:
-                ch = '-'
+            if ch==-1: ch='-'
             else:
                 ch = str(ch)
             f.write(ch)
@@ -52,141 +44,119 @@ def nexCharOutput(chMtx, names, outfile,
     f.close()
 
 
-def sscore(a, b, pmiDict, gp1, gp2):
+def sscore(a,b,pmiDict,gp1,gp2):
     """a,b: ASJP strings
     pmiDict: logodds dictionary
     gp1,gp2: gap penalties
     return PMI score of a/b
     """
-    out = pairwise2.align.globalds(a, b, pmiDict, gp1, gp2)
-    if len(out) == 0:
-        return np.nan
+    out = pairwise2.align.globalds(a,b,pmiDict,gp1,gp2)
+    if len(out)==0: return nan
     return out[0][2]
 
-
-def scoreNW(x, y, pmiDict, gp1, gp2):
+def scoreNW(x,y,pmiDict,gp1,gp2):
     """x,y: sequences of ASJP strings, separated by '-'
     pmiDict: logodds dictionary
     gp1,g2: gap penalties
     returns maximal PMI score for the Cartesian product of x and y"""
-    if '0' in [x, y]:
-        return np.nan
-    x1 = x.split('-')
-    y1 = y.split('-')
-    return max([sscore(xx, yy, pmiDict, gp1, gp2)
-                for xx in x1 for yy in y1])
+    if '0' in [x,y]: return nan
+    x1=x.split('-')
+    y1=y.split('-')
+    return max([sscore(xx,yy,pmiDict,gp1,gp2) for xx in x1 for yy in y1])
 
 
 data = pd.read_csv('albanoRomanceASJP.csv')
 data['ID'] = range(len(data))
 
-pmi = pd.read_csv('pmi-albanoRomance.csv', index_col=0)
-sounds = np.array(pmi.index)
-pmiDict = {(s1, s2): pmi[s1][s2]
+pmi = pd.read_csv('pmi-albanoRomance.csv',index_col=0)
+sounds = array(pmi.index)
+pmiDict = {(s1,s2):pmi[s1][s2]
            for s1 in sounds for s2 in sounds}
 
 
 taxa = data.language.unique()
 
 
-ipairs = pd.DataFrame([(i, j)
-                       for i in data.index
-                       for j in data.index
-                       if i < j])
+lpairs = pd.DataFrame([(l1,l2)
+                       for i,l1 in enumerate(taxa)
+                       for j,l2 in enumerate(taxa)
+                       if i<j])
 
 
-wpairs = pd.DataFrame(np.c_[data.loc[ipairs[0].values].values,
-                            data.loc[ipairs[1].values].values],
-                      columns=['concept1', 'language1', 'word1', 'ID1',
-                               'concept2', 'language2', 'word2', 'ID2'])
+wpairs = pd.DataFrame()
+for l1,l2 in lpairs.ix[random.permutation(lpairs.index)].values:
+    l1Data = data[data.language==l1]
+    l2Data = data[data.language==l2]
+    lpPairs = pd.DataFrame([list(l1Data[['concept','language','word','ID']].ix[i])+
+                            list(l2Data[['concept','language','word','ID']].ix[j])
+                            for i in l1Data.index
+                            for j in l2Data.index],
+                           columns=['concept1','language1','word1','ID1',
+                                    'concept2','language2','word2','ID2'])
+    wpairs = pd.concat([wpairs,lpPairs])
 
-wpairs = wpairs[wpairs.language1 != wpairs.language2]
-wpairs.index = range(len(wpairs))
+wpairs['target'] = array(wpairs.concept1==wpairs.concept2,int)
 
-wpairs['target'] = np.array(wpairs.concept1 == wpairs.concept2, int)
+wpairs['PMI'] = [sscore(a,b,pmiDict,gp1,gp2)
+                 for (a,b) in wpairs[['word1','word2']].values]
 
-wpairs['PMI'] = [sscore(a, b, pmiDict, gp1, gp2)
-                 for (a, b) in wpairs[['word1', 'word2']].values]
+wpairs.to_csv('albanoRomance.wordpairs.csv',index=False)
 
 lr = LogisticRegression()
-lr.fit(np.c_[wpairs.PMI.values], wpairs.target.values)
+lr.fit(c_[wpairs.PMI.values],wpairs.target.values)
 
 
-synpairs = wpairs[wpairs.target == 1][['concept1',
-                                       'language1', 'language2',
-                                       'word1', 'word2',
-                                       'ID1', 'ID2', 'PMI']]
+
+
+synpairs = wpairs[wpairs.target==1][['concept1',
+                                     'language1', 'language2',
+                                     'word1','word2',
+                                     'ID1','ID2','PMI']]
 
 synpairs.columns = ['concept']+list(synpairs.columns[1:])
 
 concepts = data.concept.unique()
 
-synpairs['prediction'] = lr.predict_proba(np.c_[synpairs.PMI.values])[:, 1]
+synpairs['prediction'] = lr.predict_proba(c_[synpairs.PMI.values])[:,1]
+
+
 
 
 ccData = pd.DataFrame()
-th = 0.5
+th = .5
 for c in concepts:
-    cData = data[data.concept == c].copy()
-    cPairs = synpairs[synpairs.concept == c]
+    cData = data[data.concept==c].copy()
+    cPairs = synpairs[synpairs.concept==c]
     cIDs = cData.ID.values
-    simMtx = np.zeros((len(cIDs), len(cIDs)))
-    simMtx[list(map(list(cIDs).index,
-                    cPairs.ID1.values)),
-           list(map(list(cIDs).index,
-                    cPairs.ID2.values))] = cPairs.prediction.values
-    simMtx[list(map(list(cIDs).index,
-                    cPairs.ID2.values)),
-           list(map(list(cIDs).index,
-                    cPairs.ID1.values))] = cPairs.prediction.values
-    simMtx[simMtx < th] = 0
+    simMtx = zeros((len(cIDs),len(cIDs)))
+    simMtx[pd.match(cPairs.ID1.values,cIDs),
+           pd.match(cPairs.ID2.values,cIDs)] = cPairs.prediction.values
+    simMtx[pd.match(cPairs.ID2.values,cIDs),
+           pd.match(cPairs.ID1.values,cIDs)] = cPairs.prediction.values
+    simMtx[simMtx<th]=0
     G = igraph.Graph.Weighted_Adjacency(list(simMtx))
     clusters = G.community_label_propagation(weights='weight')
-    ccDict = {cIDs[x]: i for i, cl in enumerate(clusters)
+    ccDict = {cIDs[x]:i for i,cl in enumerate(clusters)
               for x in cl}
     cData['cc'] = [c+':'+str(ccDict[i]) for i in cData.ID.values]
-    ccData = pd.concat([ccData, cData])
+    ccData = pd.concat([ccData,cData])
 
 
 taxa = ccData.language.unique()
 
 ccMtx = pd.DataFrame(index=taxa)
 for c in concepts:
-    cData = ccData[ccData.concept == c]
-    cMtx = pd.crosstab(cData.language, cData.cc)
-    cMtx[cMtx > 1] = 1
-    cMtx = cMtx.reindex(taxa, fill_value='-')
-    ccMtx = pd.concat([ccMtx, cMtx], axis=1)
+    cData = ccData[ccData.concept==c]
+    cMtx = pd.crosstab(cData.language,cData.cc)
+    cMtx[cMtx>1]=1
+    cMtx = cMtx.reindex(taxa,fill_value='-')
+    ccMtx = pd.concat([ccMtx,cMtx],axis=1)
 
-# ccMtx.to_csv('albanoRomanceCCbin.csv')
 
-nexCharOutput(ccMtx.values, ccMtx.index, 'albanoRomanceCC.nex')
 
-ccData.sort_values('cc').to_csv('albanoRomanceCC.csv', index='False')
+ccMtx.to_csv('albanoRomanceCCbin.csv')
 
-ccData['ccCode'] = [string.ascii_letters[i]
-                    for i in
-                    [int(x.split(':')[1]) for x in ccData.cc.values]]
+nexCharOutput(ccMtx.values,ccMtx.index,'albanoRomanceCC.nex')
 
-romance = np.array([l for l in taxa
-                    if 'ALBANIAN' not in l])
 
-romanceMultiMtx = pd.DataFrame()
-for c in concepts:
-    cData = ccData[ccData.concept == c]
-    cl = pd.Series(cData.ccCode.values,
-                   index=cData.language).reindex(romance,
-                                                 fill_value='-')
-    romanceMultiMtx = pd.concat([romanceMultiMtx,
-                                 cl], axis=1)
-romanceMultiMtx.columns = concepts
-
-nSymbols = len(ccData.ccCode.unique())
-symbols = string.ascii_letters[:nSymbols]
-
-nexCharOutput(romanceMultiMtx.values,
-              romanceMultiMtx.index,
-              'romanceMulti.nex',
-              symbols=symbols)
-
-romanceMultiMtx.to_csv('romanceMultiMtx.csv')
+ccData.to_csv('albanoRomanceCC.csv',index='False')

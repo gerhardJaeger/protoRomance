@@ -1,57 +1,65 @@
-import numpy as np
+from numpy import *
 import pandas as pd
+from subprocess import Popen
+import os
 
 
-cc = pd.read_csv('albanoRomanceCCbin.csv',
-                 index_col=0,
-                 dtype='str')
+cc = pd.read_csv('albanoRomanceCCbin.csv',index_col=0,dtype='str')
 
-romance = np.array([x for x in cc.index if 'ALBANIAN' not in x])
+romance = array([x for x in cc.index if not 'ALBANIAN' in x])
 
-cc = cc.loc[romance]
+cc = cc.ix[romance]
 
-with open('romanceCC.tsv', 'w') as f:
+with open('romanceCC.tsv','w') as f:
     for i in cc.index:
         f.write(i+'\t')
-        f.write('\t'.join(cc.loc[i].values)+'\n')
+        f.write('\t'.join(cc.ix[i].values)+'\n')
 
-p1 = pd.read_csv('albanoRomance.run1.p',
-                 sep='\t', skiprows=1)
+paupCommands = """#Nexus
+Begin Paup;
+set incr=auto;
+gettrees file = romance.posterior.tree;
+savetrees file = romance.posterior.nex.tree replace=yes brlen=user;
+q;
+End;
+"""
 
-p2 = pd.read_csv('albanoRomance.run2.p',
-                 sep='\t', skiprows=1)
+with open('convertRomancePosterior.paup','w') as f:
+    f.write(paupCommands)
 
-p3 = pd.read_csv('albanoRomance.run3.p',
-                 sep='\t', skiprows=1)
+p = Popen('paup4 convertRomancePosterior.paup>/dev/null',shell=True)
+os.waitpid(p.pid,0)
 
-p4 = pd.read_csv('albanoRomance.run4.p',
-                 sep='\t', skiprows=1)
+btCommands = """1
+1
+seed 12345;
+mlt 1;
+ga 4;
+run"""
+
+with open('asrCC.bt','w') as f:
+    f.write(btCommands)
+
+p = Popen('BayesTraits romance.posterior.nex.tree romanceCC.tsv < asrCC.bt>/dev/null',
+          shell=True)
+os.waitpid(p.pid,0)
 
 
-bi = p1.Gen.max() // 2
-pr = pd.concat([p1[p1.Gen > bi],
-                p2[p2.Gen > bi],
-                p3[p3.Gen > bi],
-                p4[p4.Gen > bi]])
+results = pd.read_table('romanceCC.tsv.log.txt',sep='\t',
+                        skiprows=25)
 
-asrCharacters = [x for x in pr.columns if 'p(1)' in x]
+cl = [x for x in results.columns if 'P(1)' in x]
 
-asr = pr[asrCharacters].median()
+results = results[cl]
+results.columns = cc.columns
 
-ccConcepts = pd.DataFrame([x.split(':') for x in cc.columns],
-                          columns=['concept', 'class'])
+concepts = unique([x.split(':')[0] for x in results.columns])
 
-ccConcepts['posterior'] = asr.values
-
-concepts = np.sort(ccConcepts.concept.unique())
-
-asr = []
+winners = []
 for c in concepts:
-    cData = ccConcepts[ccConcepts.concept == c].copy()
-    cData.index = range(len(cData))
-    i = cData.posterior.argmax()
-    asr.append(c+':' + cData['class'][i])
+    cChars = [x for x in results.columns if x.split(':')[0]==c]
+    winners.append(results.mean()[cChars].argmax())
 
-asr = pd.DataFrame(asr, index=concepts)
+winners = pd.Series(winners,index=concepts)
 
-asr.to_csv('asrCC.csv', header=None)
+winners.to_csv('asrCC.csv')
