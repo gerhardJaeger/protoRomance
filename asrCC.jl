@@ -21,7 +21,7 @@ const states = "abcdefghijk";
 #   - 1..n: tips
 #   - n+1..2n-1: internal nodes, mother before daughters
 
-const k = 11;
+const k = 31;
 q = ones((k, k));
 for i in 1:k
     q[i, i] = 1-k

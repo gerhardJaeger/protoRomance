@@ -2,7 +2,7 @@
 
 BEGIN DATA;
 DIMENSIONS ntax=50 NCHAR=40;
-FORMAT DATATYPE=STANDARD GAP=? MISSING=- symbols="abcdefghijk";
+FORMAT DATATYPE=STANDARD GAP=? MISSING=- symbols="ABCDEabcdefghijklmnopqrstuvwxyz";
 MATRIX
 
 ARAGONESE                  bbcbbccbccbcccacbbbcbabbbbbbcbbbbbbbcbbb

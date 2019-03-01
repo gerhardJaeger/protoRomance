@@ -43,7 +43,7 @@ moves[++mvi] = mvScale(alpha, lambda=1.0)
 
 
 
-k = 11
+k = 31
 
 Q = fnJC(k)
 

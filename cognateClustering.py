@@ -181,9 +181,11 @@ for c in concepts:
                                  cl], axis=1)
 romanceMultiMtx.columns = concepts
 
+symbols = ''.join(sorted(ccData.ccCode.unique()))
+
 nexCharOutput(romanceMultiMtx.values,
               romanceMultiMtx.index,
               'romanceMulti.nex',
-              symbols=string.ascii_letters[:11])
+              symbols=symbols)
 
 romanceMultiMtx.to_csv('romanceMultiMtx.csv')
