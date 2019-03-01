@@ -7,13 +7,13 @@ using Random;
 Random.seed!(12345);
 R"library(ape)";
 
-const N = 10;
+N = 1000;
 
 const posterior = CSV.read("output/ccRates.log", delim='\t');
 const treetrace = CSV.read("romance.posterior.tree", delim='\t')[1];
 const data = CSV.read("romanceMultiMtx.csv")[:,2:end];
 const taxa = CSV.read("romanceMultiMtx.csv")[:,1];
-const states = "abcdefghijk";
+const states = "abcdefghijklmnopqrstuvwxyzABCDE"
 
 
 #__convention__

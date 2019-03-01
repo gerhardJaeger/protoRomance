@@ -181,7 +181,8 @@ for c in concepts:
                                  cl], axis=1)
 romanceMultiMtx.columns = concepts
 
-symbols = ''.join(sorted(ccData.ccCode.unique()))
+nSymbols = len(ccData.ccCode.unique())
+symbols = string.ascii_letters[:nSymbols]
 
 nexCharOutput(romanceMultiMtx.values,
               romanceMultiMtx.index,
