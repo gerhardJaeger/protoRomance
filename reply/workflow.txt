@@ -7,6 +7,11 @@ Requirements:
   o pandas
   o re
 
+To avoid version conflicts, it is advisable to install python3.6 in a virtual environment
+and to install all required packages via
+
+> pip install -r requirements.txt
+
 - RevBayes v. 1.0.12 (revbayes.github.io)
 
 
@@ -14,8 +19,7 @@ Workflow:
 The entire workflow can be replicated by issuing the commands below in the order
 listed. Please note that the RevBayes script ctmc.Rev might take several days.
 
-
+> python evaluationCognateDetection.py
 > python evaluationCorrected.py
 > rb ctmc.Rev
 > python evaluatePPP.py
-
