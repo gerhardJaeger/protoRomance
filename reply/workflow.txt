@@ -1,0 +1,21 @@
+Requirements:
+
+- Python v. 3.6
+- Python packages:
+  o Levenshtein
+  o numpy
+  o pandas
+  o re
+
+- RevBayes v. 1.0.12 (revbayes.github.io)
+
+
+Workflow:
+The entire workflow can be replicated by issuing the commands below in the order
+listed. Please note that the RevBayes script ctmc.Rev might take several days.
+
+
+> python evaluationCorrected.py
+> rb ctmc.Rev
+> python evaluatePPP.py
+

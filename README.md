@@ -1,8 +1,8 @@
 # protoRomance
 
-This directory contains all data and scripts used and produced for Section 3 of the manuscript *Computational Historical Linguistics*.
+This directory contains all data and scripts used and produced for Section 3 of the TL target article *Computational Historical Linguistics*.
 
-
+The subdirectory `reply/` contains the code used for the computations described in my reply *Model evaluation in computational historical linguistics* in the same volume.
 
 ## Table of contents
 

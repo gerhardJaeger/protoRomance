@@ -1,0 +1,115 @@
+mvi = 0
+mni = 0
+
+data[1] = readDiscreteCharacterData("../albanoRomanceCC.nex")
+data[2] = readDiscreteCharacterData("../albanoRomanceSC.nex")
+
+
+taxa <- data[1].taxa()
+n_taxa <- taxa.size()
+
+n_branches <- 2 * n_taxa - 3
+
+
+# specify a prior distribution on the tree length with your desired mean
+TL ~ dnGamma(2,4)
+moves[++mvi] = mvScale(TL)
+
+
+# now create a random variable for the relative branch lengths
+rel_branch_lengths ~ dnDirichlet( rep(1.0,n_branches) )
+moves[++mvi] = mvBetaSimplex(rel_branch_lengths)
+moves[++mvi] = mvDirichletSimplex(rel_branch_lengths)
+
+
+# finally, transform the relative branch lengths into actual branch lengths
+br_lens := rel_branch_lengths * TL
+
+
+outgroup = clade(taxa[1], taxa[2], taxa[3])
+
+tau ~ dnUniformTopology(taxa, outgroup=outgroup)
+psi := treeAssembly(tau, br_lens)
+moves[++mvi] = mvNNI(tau, weight=10)
+moves[++mvi] = mvSPR(tau, weight=5)
+
+
+
+
+for (i in 1:2) {
+  pi[i] ~ dnDirichlet(v(1,1))
+  moves[++mvi] = mvBetaSimplex(pi[i], alpha=50, tune=true)
+  moves[++mvi] = mvDirichletSimplex(pi[i], alpha=50, tune=true)
+  Q[i] := fnGTR(simplex(v(1)),pi[i])
+}
+
+pi1 := pi[1][2]
+pi2 := pi[2][2]
+
+
+part_rate_mult ~ dnDirichlet( rep(1.0, 2) )
+
+moves[++mvi] = mvBetaSimplex(part_rate_mult, alpha=50, weight=5)
+moves[++mvi] = mvDirichletSimplex(part_rate_mult, alpha=50, weight=5)
+
+part_rate := part_rate_mult * 2
+
+alpha_prior_mean <- ln(2.0)
+alpha_prior_sd <- 0.587405
+
+for (i in 1:2) {
+  alpha[i] ~ dnLognormal( alpha_prior_mean, alpha_prior_sd )
+  gamma_rates[i] := fnDiscretizeGamma( alpha[i], alpha[i], 4, false )
+  moves[++mvi] = mvScale(alpha[i], lambda=1)
+}
+
+phyloSeq[1] ~ dnPhyloCTMC(tree=psi,
+                          Q=Q[1],
+                          branchRates=part_rate[1],
+                          siteRates=gamma_rates[1],
+                          type="Standard",
+                          coding="variable")
+phyloSeq[1].clamp(data[1])
+
+phyloSeq[2] ~ dnPhyloCTMC(tree=psi,
+                          Q=Q[2],
+                          branchRates=part_rate[1],
+                          siteRates=gamma_rates[2],
+                          type="Standard",
+                          coding="all")
+phyloSeq[2].clamp(data[2])
+
+mymodel = model(psi)
+
+
+thinning = 100
+
+monitors[++mni] = mnModel(filename="output/ctmc_posterior.log",
+                          printgen=thinning, separator = TAB)
+
+monitors[++mni] = mnFile(filename="output/ctmc_posterior.trees",
+                         printgen=thinning, separator = TAB, psi)
+
+monitors[++mni] = mnStochasticVariable(filename="output/ctmc_posterior.var",
+                                       printgen=50)
+
+monitors[++mni] = mnScreen(printgen=thinning, TL, pi1, pi2)
+
+
+mymcmc = mcmcmc(mymodel, monitors, moves, nruns=3, nchains=2)
+
+mymcmc.burnin(2000, tuningInterval=1000)
+mymcmc.run(generations=1000000, tuningInterval=10000)
+mymcmc.operatorSummary()
+
+trace = readStochasticVariableTrace(file="output/ctmc_posterior_run_1.var",
+                                    delimiter=TAB)
+
+pps = posteriorPredictiveSimulation(mymodel,
+                                    directory="output/ctmc_post_sims", trace)
+
+pps.run(thinning=10)
+
+
+
+q()
