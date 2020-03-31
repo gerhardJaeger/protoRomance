@@ -2,7 +2,7 @@ appdirs==1.4.3
 attrs==19.1.0
 backcall==0.1.0
 biopython==1.74
-bleach==3.1.2
+bleach==3.1.4
 clldutils==2.8.0
 colorlog==4.0.2
 configparser==4.0.2
